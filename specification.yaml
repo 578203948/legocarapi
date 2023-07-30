@@ -1,0 +1,335 @@
+openapi: 3.0.3
+info:
+  title: Lego Car API
+  description: API for controlling a Lego car
+  version: 1.0.0
+
+paths:
+  /api/car:
+    get:
+      summary: Get the current state of the car
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CarStateResponse'
+          examples:
+            application/json:
+              {
+                "error": null,
+                "success": true,
+                "data": {
+                  "speed": 50,
+                  "direction": "forward"
+                }
+              }
+        '404':
+          description: Car not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/car/speed:
+    post:
+      summary: Set the speed of the car
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CarSpeedRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+          examples:
+            application/json:
+              {
+                "error": null,
+                "success": true,
+                "data": {}
+              }
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            application/json:
+              {
+                "error": {
+                  "message": "Invalid speed value",
+                  "code": 400
+                },
+                "success": false
+              }
+        '404':
+          description: Car not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            application/json:
+              {
+                "error": {
+                  "message": "Car not found",
+                  "code": 404
+                },
+                "success": false
+              }
+  /api/car/direction:
+    post:
+      summary: Set the direction of the car
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CarDirectionRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+          examples:
+            application/json:
+              {
+                "error": null,
+                "success": true,
+                "data": {}
+              }
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            application/json:
+              {
+                "error": {
+                  "message": "Invalid direction value",
+                  "code": 400
+                },
+                "success": false
+              }
+        '404':
+          description: Car not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            application/json:
+              {
+                "error": {
+                  "message": "Car not found",
+                  "code": 404
+                },
+                "success": false
+              }
+  /api/car/fanfare:
+    post:
+      summary: Toggle the fanfare of the car
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+          examples:
+            application/json:
+              {
+                "error": null,
+                "success": true,
+                "data": {}
+              }
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            application/json:
+              {
+                "error": {
+                  "message": "Invalid request",
+                  "code": 400
+                },
+                "success": false
+              }
+        '404':
+          description: Car not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            application/json:
+              {
+                "error": {
+                  "message": "Car not found",
+                  "code": 404
+                },
+                "success": false
+              }
+  /api/car/light:
+    post:
+      summary: Toggle the lights of the car
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+          examples:
+            application/json:
+              {
+                "error": null,
+                "success": true,
+                "data": {}
+              }
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            application/json:
+              {
+                "error": {
+                  "message": "Invalid request",
+                  "code": 400
+                },
+                "success": false
+              }
+        '404':
+          description: Car not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            application/json:
+              {
+                "error": {
+                  "message": "Car not found",
+                  "code": 404
+                },
+                "success": false
+              }
+
+components:
+  schemas:
+    CarStateResponse:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/Error'
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/CarState'
+    CarSpeedRequest:
+      type: object
+      properties:
+        speed:
+          type: integer
+          minimum: 0
+          maximum: 100
+      required:
+        - speed
+    CarDirectionRequest:
+      type: object
+      properties:
+        direction:
+          type: string
+          enum:
+            - forward
+            - forward_right
+            - forward_left
+            - backwards
+            - backwards_right
+            - backwards_left
+      required:
+        - direction
+    SuccessResponse:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/Error'
+        success:
+          type: boolean
+        data:
+          type: object
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/Error'
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+    CarState:
+      type: object
+      properties:
+        speed:
+          type: integer
+          minimum: 0
+          maximum: 100
+        direction:
+          type: string
+          enum:
+            - forward
+            - forward_right
+            - forward_left
+            - backwards
+            - backwards_right
+            - backwards_left
